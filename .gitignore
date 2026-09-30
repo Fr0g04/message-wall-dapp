@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+
+# development helpers; the Render service does not need any of this
+tools/node_modules/
+tools/package-lock.json
+tools/.npmcache/
+tools/.home/
+tools/cache/
+tools/artifacts/
+tools/.local-address
+tools/.chrome-profile*/

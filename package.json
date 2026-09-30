@@ -1,0 +1,25 @@
+{
+  "name": "message-wall-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Development helpers for the Message Wall dApp: compile, deploy, and test. Not needed by the Render service.",
+  "type": "commonjs",
+  "license": "MIT",
+  "scripts": {
+    "compile": "node compile.js",
+    "deploy": "node deploy.js",
+    "chain": "hardhat node --hostname 127.0.0.1 --port 8545",
+    "deploy:local": "node deploy-local.js",
+    "test:contract": "hardhat run test-hardhat.js",
+    "test:browser": "node test-browser.js",
+    "test:wallet": "node test-wallet.js",
+    "check:rpcs": "node check-rpcs.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "ethers": "^6.15.0",
+    "hardhat": "^2.26.0",
+    "puppeteer-core": "^25.12.0",
+    "solc": "0.8.26"
+  }
+}

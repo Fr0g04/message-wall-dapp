@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070b18">
+  <meta name="description" content="A public message wall stored on the Ethereum Sepolia testnet. Post and read messages straight from your phone.">
+  <meta name="color-scheme" content="dark">
+  <title>{{ config.title }} — on-chain message wall</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app">
+    <header class="head">
+      <div class="head-top">
+        <span class="eyebrow">SOLIDITY · FLASK · RENDER</span>
+        <button id="wallet-button" class="chip" type="button">Connect wallet</button>
+      </div>
+      <h1>{{ config.title }}</h1>
+      <p class="lede">Every message below is stored on the Ethereum <strong>{{ config.chainName }}</strong> testnet. Anyone can read it; your wallet signs what you post.</p>
+      <div class="net-row">
+        <span id="net-pill" class="pill">Checking network…</span>
+        <span id="account-pill" class="pill muted">No wallet connected</span>
+      </div>
+    </header>
+
+    <div id="status" class="banner" role="status" aria-live="polite">Waking up the app…</div>
+
+    <section id="setup" class="card hidden" aria-labelledby="setup-title">
+      <h2 id="setup-title">One-time setup</h2>
+      <p class="hint">Deploy <code>MessageWall.sol</code> in Remix on {{ config.chainName }}, then paste the contract address here. It is remembered on this device only.</p>
+      <label for="setup-address">Contract address</label>
+      <input id="setup-address" type="text" inputmode="text" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="0x…">
+      <button id="setup-save" class="primary" type="button">Use this contract</button>
+    </section>
+
+    <section class="card" aria-labelledby="compose-title">
+      <h2 id="compose-title">Write on the wall</h2>
+      <label class="sr-only" for="message-text">Your message</label>
+      <textarea id="message-text" rows="3" maxlength="400" placeholder="Say something the blockchain will remember…"></textarea>
+      <div class="compose-row">
+        <span id="counter" class="counter">0 / {{ config.maxTextLength }}</span>
+        <button id="post-button" class="primary" type="button" disabled>Post message</button>
+      </div>
+      <p class="hint">Posting costs a little test ETH for gas. Messages cannot be edited or deleted afterwards.</p>
+    </section>
+
+    <section class="card" aria-labelledby="wall-title">
+      <div class="wall-head">
+        <h2 id="wall-title">The wall</h2>
+        <button id="refresh-button" class="ghost" type="button">Refresh</button>
+      </div>
+      <div class="stats">
+        <div><span id="stat-total" class="stat">–</span><small>messages</small></div>
+        <div><span id="stat-mine" class="stat">–</span><small>posted by you</small></div>
+        <div><span id="stat-limit" class="stat">{{ config.maxTextLength }}</span><small>max bytes</small></div>
+      </div>
+      <ul id="wall" class="wall"></ul>
+      <p id="wall-empty" class="hint hidden">The wall is empty. Be the first to post.</p>
+      <button id="more-button" class="ghost wide hidden" type="button">Show older messages</button>
+    </section>
+
+    <section class="card" aria-labelledby="owner-title">
+      <h2 id="owner-title">Owner tools</h2>
+      <p class="hint" id="owner-hint">Only the wallet that deployed the contract can clear the wall.</p>
+      <p class="mono" id="owner-address">—</p>
+      <button id="clear-button" class="danger" type="button" disabled>Clear the whole wall</button>
+    </section>
+
+    <details class="card settings">
+      <summary>Settings</summary>
+      <div class="settings-body">
+        <label for="contract-input">Contract address</label>
+        <input id="contract-input" type="text" inputmode="text" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="0x…">
+        <div class="compose-row">
+          <button id="contract-save" class="primary" type="button">Save on this device</button>
+          <button id="contract-reset" class="ghost" type="button">Use server default</button>
+        </div>
+        <p class="hint" id="contract-source">—</p>
+
+        <label for="rpc-input">Sepolia RPC endpoint</label>
+        <input id="rpc-input" type="text" inputmode="url" autocapitalize="off" autocomplete="off" spellcheck="false">
+        <div class="compose-row">
+          <button id="rpc-save" class="primary" type="button">Save on this device</button>
+          <button id="rpc-reset" class="ghost" type="button">Use server default</button>
+        </div>
+
+        <p class="hint">Chain ID <span class="mono">{{ config.chainId }}</span> · Explorer
+          <a id="explorer-link" href="{{ config.explorer }}" target="_blank" rel="noopener noreferrer">{{ config.explorer }}</a>
+        </p>
+      </div>
+    </details>
+
+    <footer class="foot">
+      <p>Open this page inside the MetaMask app browser on your phone, or use any wallet-enabled desktop browser.</p>
+    </footer>
+  </div>
+
+  <script id="app-config" type="application/json">{{ config | tojson }}</script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
